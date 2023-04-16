@@ -15,7 +15,7 @@ public class PlayersController : ApiController
         _playersService = playersService;
     }
 
-    [HttpGet("GetAll")]
+    [HttpGet]
     public async Task<IActionResult> Get()
     {
         var getPlayerResult = await _playersService.GetAllPlayers();
@@ -26,6 +26,13 @@ public class PlayersController : ApiController
     public async Task<IActionResult> GetPlayer(int id)
     {
         var getPlayerResult = await _playersService.Get(id);
+        return getPlayerResult.Match(Ok, Problem);
+    }
+
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetStats()
+    {
+        var getPlayerResult = await _playersService.GetStats();
         return getPlayerResult.Match(Ok, Problem);
     }
 }

@@ -36,4 +36,46 @@ public class PlayersService : IPlayersService
         return player;
     }
 
+    public async Task<ErrorOr<Stats>> GetStats()
+    {
+        var players = await _playerDataProvider.Get();
+        if (players == null)
+            return Errors.Player.Unavailable;
+        if (!players.PlayerList.Any())
+            return Errors.Player.NotFound;
+        var stats = GetStats(players.PlayerList);
+        return stats;
+    }
+
+    private Stats GetStats(List<Player> players)
+    {
+        var countryWithHighestWinRatio = players
+            .GroupBy(p => p.Country.Code)
+            .Select(group => new
+            {
+                Country = group.Key,
+                WinRatio = group.Sum(p => p.Data.Last.Count(x => x == 1)) / (double)group.Sum(p => p.Data.Last.Count())
+            })
+            .OrderByDescending(x => x.WinRatio)
+            .First()
+            .Country;
+
+        var averageBMI = players.Average(p => p.Data.Weight/1000.0 / Math.Pow(p.Data.Height / 100.0, 2));
+        var roundBmi = Math.Round(averageBMI, 2);
+
+        var heights = players.Select(p => p.Data.Height).OrderBy(x => x).ToList();
+        double medianHeight;
+        if (heights.Count % 2 == 0)
+            medianHeight = (heights[heights.Count / 2 - 1] + heights[heights.Count / 2]) / 2.0;
+        else
+            medianHeight = heights[heights.Count / 2];
+
+        return new Stats()
+        {
+            AverageBodyMassIndex = roundBmi,
+            CountryWithHighestWinRatio = countryWithHighestWinRatio,
+            MedianeHeight = medianHeight
+        };
+    }
+
 }

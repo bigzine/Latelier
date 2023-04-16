@@ -7,4 +7,5 @@ public interface IPlayersService
 {
     Task<ErrorOr<List<Player>>> GetAllPlayers();
     Task<ErrorOr<Player>> Get(int id);
+    Task<ErrorOr<Stats>> GetStats();
 }

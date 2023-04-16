@@ -46,7 +46,7 @@ namespace AtelierTennis.Tests.Fixtures
                 {
                     Rank = 20,
                     Points = 1000,
-                    Weight = 65,
+                    Weight = 65000,
                     Age = 34,
                     Height = 170,
                     Last = new[] { 1, 0, 1, 0 }
@@ -69,7 +69,7 @@ namespace AtelierTennis.Tests.Fixtures
                 {
                     Rank = 6,
                     Points = 1000,
-                    Weight = 65,
+                    Weight = 74000,
                     Age = 34,
                     Height = 170,
                     Last = new[] { 1, 1, 1, 1 }

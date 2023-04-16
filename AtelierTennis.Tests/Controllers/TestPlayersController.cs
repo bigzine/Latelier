@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace AtelierTennis.Tests.Controllers
@@ -126,7 +127,6 @@ namespace AtelierTennis.Tests.Controllers
 
             var sut = new PlayersController(mockPlayerService.Object);
 
-
             //Act
             await sut.GetPlayer(1);
 
@@ -183,6 +183,92 @@ namespace AtelierTennis.Tests.Controllers
 
             //Act
             var result = (ObjectResult)await sut.GetPlayer(44);
+
+            //Assert
+            result.StatusCode.ShouldBe(500);
+        }
+
+        [Test]
+        public async Task GetStats_OnSuccess_ReturnsStatusCode200()
+        {
+            //Arrange
+            var mockPlayerService = new Mock<IPlayersService>();
+            mockPlayerService
+                .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
+
+            var sut = new PlayersController(mockPlayerService.Object);
+
+            //Act
+            var result = (OkObjectResult)await sut.GetStats();
+
+            //Assert
+            result.StatusCode.ShouldBe(200);
+        }
+
+        [Test]
+        public async Task GetStats_OnSuccess_InvokePlayersServiceExactlyOnce()
+        {
+            //Arrange
+            var mockPlayerService = new Mock<IPlayersService>();
+            mockPlayerService
+                .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
+
+            var sut = new PlayersController(mockPlayerService.Object);
+
+            //Act
+            var result = (OkObjectResult)await sut.GetStats();
+
+            //Assert
+            mockPlayerService.Verify(p => p.GetStats(), Times.Once);
+        }
+
+        [Test]
+        public async Task GetStats_OnSuccess_ReturnsPlayer()
+        {
+            //Arrange
+            var mockPlayerService = new Mock<IPlayersService>();
+            mockPlayerService
+                .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
+
+            var sut = new PlayersController(mockPlayerService.Object);
+
+            //Act
+            var result = (OkObjectResult)await sut.GetStats();
+
+            //Assert
+            result.ShouldBeOfType<OkObjectResult>();
+            result.Value.ShouldBeOfType<Stats>();
+        }
+
+        [Test]
+        public async Task GetStats_OnNoPlayersFound_Returns404()
+        {
+            //Arrange
+            var mockPlayerService = new Mock<IPlayersService>();
+            mockPlayerService
+                .Setup(s => s.GetStats()).ReturnsAsync(Errors.Player.NotFound);
+
+            var sut = new PlayersController(mockPlayerService.Object);
+
+            //Act
+            var result = (ObjectResult)await sut.GetStats();
+
+            //Assert
+            result.StatusCode.ShouldBe(404);
+        }
+
+        [Test]
+        public async Task GetStats_OnServiceUnavailable_Returns500()
+        {
+            //Arrange
+            var mockPlayerService = new Mock<IPlayersService>();
+            mockPlayerService
+                .Setup(s => s.GetStats()).ReturnsAsync(Errors.Player.Unavailable);
+
+            var sut = new PlayersController(mockPlayerService.Object);
+
+            //Act
+            var result = (ObjectResult)await sut.GetStats();
 
             //Assert
             result.StatusCode.ShouldBe(500);
