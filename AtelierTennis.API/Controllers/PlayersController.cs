@@ -21,4 +21,11 @@ public class PlayersController : ApiController
         var getPlayerResult = await _playersService.GetAllPlayers();
         return getPlayerResult.Match(Ok,Problem);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPlayer(int id)
+    {
+        var getPlayerResult = await _playersService.Get(id);
+        return getPlayerResult.Match(Ok, Problem);
+    }
 }

@@ -26,6 +26,14 @@ public class PlayersService : IPlayersService
         return orderPlayers.ToList();
     }
 
-
+    public async Task<ErrorOr<Player>> Get(int id)
+    {
+        var players = await _playerDataProvider.Get();
+        if (players == null)
+            return Errors.Player.Unavailable;
+        var player = players.PlayerList.FirstOrDefault(p => p.Id == id);
+        if(player==null) return Errors.Player.NotFound;
+        return player;
+    }
 
 }

@@ -5,5 +5,6 @@ namespace AtelierTennis.API.Services.Interfaces;
 
 public interface IPlayersService
 {
-   public   Task<ErrorOr<List<Player>>> GetAllPlayers();
+    Task<ErrorOr<List<Player>>> GetAllPlayers();
+    Task<ErrorOr<Player>> Get(int id);
 }
