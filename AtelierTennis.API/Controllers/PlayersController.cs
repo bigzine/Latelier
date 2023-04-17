@@ -1,4 +1,3 @@
-using AtelierTennis.API.ServiceError;
 using AtelierTennis.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +8,12 @@ namespace AtelierTennis.API.Controllers;
 public class PlayersController : ApiController
 {
     private readonly IPlayersService _playersService;
+    private readonly ILogger<PlayersController> _logger;
 
-    public PlayersController(IPlayersService playersService)
+    public PlayersController(IPlayersService playersService, ILogger<PlayersController> logger) : base(logger)
     {
         _playersService = playersService;
+        _logger = logger;
     }
 
     [HttpGet]

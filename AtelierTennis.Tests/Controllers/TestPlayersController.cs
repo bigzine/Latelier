@@ -3,13 +3,11 @@ using AtelierTennis.API.Models;
 using AtelierTennis.API.ServiceError;
 using AtelierTennis.API.Services.Interfaces;
 using AtelierTennis.Tests.Fixtures;
-using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 
 namespace AtelierTennis.Tests.Controllers
 {
@@ -22,7 +20,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetAllPlayers()).ReturnsAsync(PlayersFixture.GetTestPlayers());
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object,NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await  sut.Get();
@@ -38,11 +36,11 @@ namespace AtelierTennis.Tests.Controllers
             var mockPlayerService = new Mock<IPlayersService>();
             mockPlayerService
                 .Setup(s => s.GetAllPlayers()).ReturnsAsync(PlayersFixture.GetTestPlayers());
-                
-            var sut = new PlayersController(mockPlayerService.Object);
+
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
-           await sut.Get();
+            await sut.Get();
 
             //Assert
             mockPlayerService.Verify(p=>p.GetAllPlayers(), Times.Once);
@@ -56,7 +54,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetAllPlayers()).ReturnsAsync(PlayersFixture.GetTestPlayers());
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.Get();
@@ -74,7 +72,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetAllPlayers()).ReturnsAsync(Errors.Player.NotFound);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.Get();
@@ -91,7 +89,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetAllPlayers()).ReturnsAsync(Errors.Player.Unavailable);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.Get();
@@ -108,7 +106,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.Get(It.IsAny<int>())).ReturnsAsync(PlayersFixture.GetTestPlayers().First());
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.GetPlayer(1);
@@ -125,8 +123,8 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.Get(It.IsAny<int>())).ReturnsAsync(PlayersFixture.GetTestPlayers().First());
 
-            var sut = new PlayersController(mockPlayerService.Object);
-
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
+            
             //Act
             await sut.GetPlayer(1);
 
@@ -142,8 +140,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.Get(It.IsAny<int>())).ReturnsAsync(PlayersFixture.GetTestPlayers().First());
 
-            var sut = new PlayersController(mockPlayerService.Object);
-
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.GetPlayer(1);
@@ -161,8 +158,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.Get(It.IsAny<int>())).ReturnsAsync(Errors.Player.NotFound);
 
-            var sut = new PlayersController(mockPlayerService.Object);
-
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.GetPlayer(44);
@@ -179,7 +175,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.Get(It.IsAny<int>())).ReturnsAsync(Errors.Player.Unavailable);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.GetPlayer(44);
@@ -196,7 +192,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.GetStats();
@@ -213,7 +209,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.GetStats();
@@ -230,7 +226,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetStats()).ReturnsAsync(StatsFixture.GetStats);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (OkObjectResult)await sut.GetStats();
@@ -248,7 +244,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetStats()).ReturnsAsync(Errors.Player.NotFound);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.GetStats();
@@ -265,7 +261,7 @@ namespace AtelierTennis.Tests.Controllers
             mockPlayerService
                 .Setup(s => s.GetStats()).ReturnsAsync(Errors.Player.Unavailable);
 
-            var sut = new PlayersController(mockPlayerService.Object);
+            var sut = new PlayersController(mockPlayerService.Object, NullLogger<PlayersController>.Instance);
 
             //Act
             var result = (ObjectResult)await sut.GetStats();

@@ -20,9 +20,9 @@ public class PlayersService : IPlayersService
         var players = await _playerDataProvider.Get();
         if (players == null)
             return Errors.Player.Unavailable;
-        if (!players.PlayerList.Any())
+        if (!players.Any())
             return Errors.Player.NotFound;
-        var orderPlayers = players.PlayerList.OrderBy(p => p.Data.Rank).Select(p => p);
+        var orderPlayers = players.OrderBy(p => p.Data!.Rank).Select(p => p);
         return orderPlayers.ToList();
     }
 
@@ -31,7 +31,7 @@ public class PlayersService : IPlayersService
         var players = await _playerDataProvider.Get();
         if (players == null)
             return Errors.Player.Unavailable;
-        var player = players.PlayerList.FirstOrDefault(p => p.Id == id);
+        var player = players.FirstOrDefault(p => p.Id == id);
         if(player==null) return Errors.Player.NotFound;
         return player;
     }
@@ -41,16 +41,16 @@ public class PlayersService : IPlayersService
         var players = await _playerDataProvider.Get();
         if (players == null)
             return Errors.Player.Unavailable;
-        if (!players.PlayerList.Any())
+        if (!players.Any())
             return Errors.Player.NotFound;
-        var stats = GetStats(players.PlayerList);
+        var stats = GetStats(players);
         return stats;
     }
 
     private Stats GetStats(List<Player> players)
     {
         var countryWithHighestWinRatio = players
-            .GroupBy(p => p.Country.Code)
+            .GroupBy(p => p.Country!.Code)
             .Select(group => new
             {
                 Country = group.Key,

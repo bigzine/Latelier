@@ -2,5 +2,5 @@
 
 public class PlayerDataOptions
 {
-    public string Path { get; set; }
+    public required string Path { get; set; }
 }

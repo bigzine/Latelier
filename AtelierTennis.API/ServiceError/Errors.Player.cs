@@ -10,7 +10,7 @@ public static class Errors
         public static Error Unavailable => Error.Custom(
             503,"PlayersList.Unavailable",
             "Cannot get player list");
-        public static Error NotFound => Error.NotFound("Player.NotFound","A not found error are occur");
+        public static Error NotFound => Error.NotFound("Player.NotFound","A not found error occurred");
     }
     
 }

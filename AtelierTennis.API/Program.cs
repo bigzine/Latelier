@@ -2,7 +2,6 @@ using AtelierTennis.API.Data;
 using AtelierTennis.API.Options;
 using AtelierTennis.API.Services;
 using AtelierTennis.API.Services.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

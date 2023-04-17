@@ -1,7 +1,8 @@
-using System.Text.Json;
 using AtelierTennis.API.Models;
 using AtelierTennis.API.Options;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AtelierTennis.API.Data;
 
@@ -13,14 +14,10 @@ public class FsPlayerDataProvider : IPlayerDataProvider
         _playerFilePath = options.Value.Path;
     }
 
-    public async Task<Players?> Get()
+    public async Task<List<Player>?> Get()
     {
-        await using var stream = File.OpenRead(_playerFilePath);
-        var options = new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true
-        };
-        var players = await JsonSerializer.DeserializeAsync<Players>(stream, options);
+        var file = await File.ReadAllTextAsync(_playerFilePath);
+        var players = JsonConvert.DeserializeObject<JObject>(file)["players"].ToObject<List<Player>>();
         return players;
     }
 

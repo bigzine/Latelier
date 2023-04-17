@@ -4,5 +4,5 @@ namespace AtelierTennis.API.Data;
 
 public interface IPlayerDataProvider
 {
-    Task<Players?> Get();
+    Task<List<Player>?> Get();
 }
